@@ -76,3 +76,35 @@ def two_dimension_arr():
   print(range_arr)
 
 # two_dimension_arr()
+
+# 3차원 배열 생성 -> 텐서 (Tensor). 축이 3개 (Axis 0:깊이-면, 1: 행, 2: 열)
+def three_dimension_arr():
+  arr = np.array([
+    [
+      [1,2,3],
+      [4,5,6]
+    ],
+    [
+      [7,8,9],
+      [10,11,12]
+    ]
+  ])
+
+  print(arr)
+  print(type(arr))
+
+  print(arr.ndim)
+  print(arr.shape)   # (2,2,3) -> 2개의 면, 2개의 행, 3개의 열
+
+  # 0으로 채워서 배열 생성 : np.zeros((면,행,열))
+  zeros_arr = np.zeros((2,3,4))
+  print(zeros_arr)
+
+  # 1로 채워서 배열 생성 : np.ones((면, 행, 열))
+  ones_arr = np.ones((1, 2, 3))
+  '''
+    [[[1,1,1],[1,1,1]]]
+  '''
+  print(ones_arr)
+
+three_dimension_arr()
