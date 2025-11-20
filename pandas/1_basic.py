@@ -61,3 +61,12 @@ print(f'index (행의 인덱스) : {df.index} / {df.index.to_list()}')
 print(f'columns (열의 인덱스) : {df.columns} / {df.columns.to_list()}')
 print(f'values (실제 데이터) : {df.values}')
 print(f'dtypes (요소 타입, 컬럼(열) 기준) : {df.dtypes}')
+
+
+# * DataFrame 요약 정보
+print(f'--- DataFrame 요약정보: info() ---')
+df.info()
+
+# * DataFrame 요약 통계
+print(f'--- DataFrame 요약 통계: describe() ---')
+print(df.describe())
