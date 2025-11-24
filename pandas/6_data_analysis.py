@@ -185,3 +185,26 @@ print(pivot_ctg_mean)
 print()
 
 # - 카테고리별 프로모션 사용 여부에 대한 평균 금액 조회
+pivot_mean = pd.pivot_table(df
+               , index='Product_Category'
+               , columns='Promotion_Used'
+               , values='Sales_Amount'
+               , aggfunc='mean')
+
+print('* 카테고리 별 프로모션 사용 여부에 따른 평균 금액 *')
+print(pivot_mean)
+# => 피벗 테이블 : 복잡한 테이블 데이터를 2차원 교차 요약표 형태로 재구성하는 함수
+#                  groupby와 agg를 조합한 것과 유사하지만, 가로/세로 축으로 펼쳐서 보여주는 특징을 가짐
+
+# 카테고리 별 프로모션 사용 여부에 따른 평균금액, 평점평균 조회
+last_pivot = pd.pivot_table(df
+               , index='Product_Category'
+               , columns='Promotion_Used'
+               , values=['Sales_Amount', 'Customer_Rating']
+               , aggfunc={'Sales_Amount': 'mean', 'Customer_Rating': 'mean'}
+               , fill_value=0.0)
+
+print('* 카테고리 별 프로모션 사용 여부에 따른 평균 금액/평점 비교 *')
+print(last_pivot)
+
+# 결측치 대체값 설정 : pivot_table(..., fill_value=대체값)
