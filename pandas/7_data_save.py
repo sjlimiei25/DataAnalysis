@@ -43,3 +43,13 @@ print(f'*** CSV 파일로 저장 완료 : {save_filepath} ***')
 save_df = pd.read_csv(save_filepath)
 print(save_df)
 # ===========================================================
+
+# * Excel 저장
+#     to_excel(파일명, index=인덱스행저장여부, sheet_name=시트명)
+#     - sheet_name : 저장될 시트 이름. 기본값: Sheet1
+#     => 내부적으로 이미 유니코드 기반으로 문자를 저장하도록 설계되어 있음
+save_excel_filepath = 'result.xlsx'
+df_summary.to_excel(save_excel_filepath, index=False, sheet_name='Summary')
+print(f'*** 엑셀파일로 저장 완료 : {save_excel_filepath}')
+# ==> 엑셀 파일 저장 시 'openpyxl' 모듈 설치 필요
+#     > pip install openpyxl
