@@ -84,3 +84,8 @@ if totalCount > 0:
 # numOfRows : 100, totalCount : 172 --> 전체 페이지 수 : 2
 # 
 # 전체 데이터를 수집하여 csv 파일로 저장 -> financial_ss.csv
+def get_params(page_no, num_of_rows):
+  pass
+
+def get_all_data():
+  pass
