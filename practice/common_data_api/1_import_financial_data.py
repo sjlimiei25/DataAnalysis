@@ -2,8 +2,15 @@
 import requests
 import pandas as pd
 
+# 환경 변수 관련 모듈 ----
+import os
+from dotenv import load_dotenv
+#import dotenv
+# ---------
+load_dotenv()     # .env 파일 불러오기
+
 # * 공공데이터 포털 사이트에서 발급받은 서비스 키(인증키)
-SERVICE_KEY='발급받은 서비스 키'
+SERVICE_KEY=os.environ.get('SERVICE_KEY')
 
 # * BASE URL
 BASE_SERVICE_URL='https://apis.data.go.kr/1160100/service/GetFinaStatInfoService_V2'
@@ -64,7 +71,7 @@ def get_first_data():
     return items, totalCount
   else:
     return [], 0
-
+'''
 data_list, totalCount = get_first_data()
 # print(len(data_list), totalCount)
 if totalCount > 0:
@@ -72,5 +79,8 @@ if totalCount > 0:
   df = pd.DataFrame(data_list)
   df.to_csv('financial_ss.csv', encoding='utf-8')
   print("* --- 파일 저장 완료 --- *")
-
-  
+'''
+# numOfRows : 10 , totalCount : 172 --> math.ceil(totalCount / numOfRows) 올림처리!! -> 전체 페이지 수: 18
+# numOfRows : 100, totalCount : 172 --> 전체 페이지 수 : 2
+# 
+# 전체 데이터를 수집하여 csv 파일로 저장 -> financial_ss.csv
