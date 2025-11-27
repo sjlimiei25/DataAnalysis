@@ -1,4 +1,6 @@
 # practice/common_data_api/1_import_financial_data.py
+import math
+import time
 import requests
 import pandas as pd
 
@@ -6,6 +8,7 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 #import dotenv
+# > pip install python-dotenv
 # ---------
 load_dotenv()     # .env 파일 불러오기
 
@@ -85,7 +88,79 @@ if totalCount > 0:
 # 
 # 전체 데이터를 수집하여 csv 파일로 저장 -> financial_ss.csv
 def get_params(page_no, num_of_rows):
-  pass
+  """
+  get_params의 Docstring
+  API 요청에 필요한 매개변수(Query Parameters)를 반환해주는 함수
+  
+  :param page_no: 페이지 번호
+  :param num_of_rows: 한 페이지 당 데이터 개수
+  """
+  return {
+    "numOfRows": str(num_of_rows),
+    "pageNo": str(page_no),
+    "resultType": "json",
+    "serviceKey": SERVICE_KEY,
+    "crno": "1301110006246"     # 삼성전자 법인번호
+  }
 
 def get_all_data():
-  pass
+  """
+  get_all_data의 Docstring
+  전체 데이터를 수집하여 리스트 형태로 반환해주는 함수
+  """
+  all_data = []     # 전체 데이터를 저장할 변수(리스트)
+  data_size = 30    # 한 번에 요청할 데이터 개수(numOfRows)
+
+  print(f'* --- {data_size} 건씩 요청 --- *')
+
+  # 첫 요청 -> 페이지 번호: 1, 요청 데이터 개수: data_size
+  params = get_params(1, data_size)
+
+  # API로 요청
+  response = requests.get(REQUEST_URL, params=params)
+  data = response.json()
+
+  # 응답 데이터에서 (totalCount' - 전체 데이터 개수, 'item' - 현재 요청한 데이터 목록) 추출
+
+  body = data.get('response', {}).get('body', {})
+  total_count = body.get('totalCount', 0)
+  items = body.get('items', {}).get('item', [])
+
+  #all_data += items    # [] + [....]
+  all_data.extend(items) # => [....]
+  print(f'* --- 전체 데이터 개수 : {total_count}')
+
+  # 전체 페이지 수 계산
+  #  => (전체_데이터_개수 / 요청할_데이터_수) 올림처리
+  #     math.ceil(total_count / data_size)
+  total_pages = math.ceil(total_count/data_size)
+  print(f'* --- 요청할 전체 페이지 수 : {total_pages}')
+
+  # 2 페이지부터 마지막 페이지(total_pages)까지 요청
+  # => 반복문 사용 
+  #    [2,3,...,total_pages] -> range(2, total_pages+1)
+  for page_no in range(2, total_pages+1):
+    print(f'* ---- {page_no}/{total_pages} 요청 시작 ---- *')
+
+    # 요청 데이터 (parameters)
+    params = get_params(page_no, data_size)
+
+    time.sleep(1)   # 1초 지연 => 서버 부하 방지
+
+    # API로 요청
+    response = requests.get(REQUEST_URL, params=params)
+    data = response.json()
+
+    # 응답 데이터 목록('item') 추출
+    items = data.get('response', {}).get('body', {}).get('items', {}).get('item', [])
+    all_data.extend(items)
+
+  return all_data
+
+# 삼성전자 재무정보 조회 후 CSV 파일로 저장 (financial_ss.csv)
+ss_data = get_all_data() # [......]
+df = pd.DataFrame(ss_data)
+
+file_name = 'financial_ss.csv'
+df.to_csv(file_name, encoding='utf-8')
+print('* --- 데이터 수집 및 CSV 저장 완료 --- *')
